@@ -120,9 +120,9 @@ static void epd_board_init(uint32_t epd_row_width) {
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
     conf.master.clk_speed = 100000;
     conf.clk_flags = 0;
-    ESP_ERROR_CHECK(i2c_param_config(EPDIY_I2C_PORT, &conf));
+    // ESP_ERROR_CHECK(i2c_param_config(EPDIY_I2C_PORT, &conf));
 
-    ESP_ERROR_CHECK(i2c_driver_install(EPDIY_I2C_PORT, I2C_MODE_MASTER, 0, 0, 0));
+    // ESP_ERROR_CHECK(i2c_driver_install(EPDIY_I2C_PORT, I2C_MODE_MASTER, 0, 0, 0));
 
     config_reg.port = EPDIY_I2C_PORT;
     config_reg.pwrup = false;
@@ -135,12 +135,12 @@ static void epd_board_init(uint32_t epd_row_width) {
     gpio_set_direction(CFG_INTR, GPIO_MODE_INPUT);
     gpio_set_intr_type(CFG_INTR, GPIO_INTR_NEGEDGE);
 
-    ESP_ERROR_CHECK(gpio_install_isr_service(ESP_INTR_FLAG_EDGE));
+    // ESP_ERROR_CHECK(gpio_install_isr_service(ESP_INTR_FLAG_EDGE));
 
-    ESP_ERROR_CHECK(gpio_isr_handler_add(CFG_INTR, interrupt_handler, (void*)CFG_INTR));
+    // ESP_ERROR_CHECK(gpio_isr_handler_add(CFG_INTR, interrupt_handler, (void*)CFG_INTR));
 
     // set all epdiy lines to output except TPS interrupt + PWR good
-    ESP_ERROR_CHECK(pca9555_set_config(config_reg.port, CFG_PIN_PWRGOOD | CFG_PIN_INT, 1));
+    // ESP_ERROR_CHECK(pca9555_set_config(config_reg.port, CFG_PIN_PWRGOOD | CFG_PIN_INT, 1));
 
     const EpdDisplay_t* display = epd_get_display();
 
@@ -158,19 +158,19 @@ static void epd_board_init(uint32_t epd_row_width) {
 static void epd_board_deinit() {
     epd_lcd_deinit();
 
-    ESP_ERROR_CHECK(pca9555_set_config(
-        config_reg.port, CFG_PIN_PWRGOOD | CFG_PIN_INT | CFG_PIN_VCOM_CTRL | CFG_PIN_PWRUP, 1
-    ));
+    // ESP_ERROR_CHECK(pca9555_set_config(
+    //    config_reg.port, CFG_PIN_PWRGOOD | CFG_PIN_INT | CFG_PIN_VCOM_CTRL | CFG_PIN_PWRUP, 1
+    // ));
 
     int tries = 0;
-    while (!((pca9555_read_input(config_reg.port, 1) & 0xC0) == 0x80)) {
-        if (tries >= 50) {
-            ESP_LOGE("epdiy", "failed to shut down TPS65185!");
-            break;
-        }
-        tries++;
-        vTaskDelay(1);
-    }
+    // while (!((pca9555_read_input(config_reg.port, 1) & 0xC0) == 0x80)) {
+    //   if (tries >= 50) {
+    //     ESP_LOGE("epdiy", "failed to shut down TPS65185!");
+    //     break;
+    //   }
+    //   tries++;
+    //   vTaskDelay(1);
+    // }
 
     // Not sure why we need this delay, but the TPS65185 seems to generate an interrupt after some
     // time that needs to be cleared.
@@ -197,7 +197,7 @@ static void epd_board_set_ctrl(epd_ctrl_state_t* state, const epd_ctrl_state_t* 
         if (config_reg.wakeup)
             value |= CFG_PIN_WAKEUP;
 
-        ESP_ERROR_CHECK(pca9555_set_value(config_reg.port, value, 1));
+        //ESP_ERROR_CHECK(pca9555_set_value(config_reg.port, value, 1));
     }
 }
 
@@ -220,12 +220,12 @@ static void epd_board_poweron(epd_ctrl_state_t* state) {
     // give the IC time to powerup and set lines
     vTaskDelay(1);
 
-    while (!(pca9555_read_input(config_reg.port, 1) & CFG_PIN_PWRGOOD)) {
-    }
+    // while (!(pca9555_read_input(config_reg.port, 1) & CFG_PIN_PWRGOOD)) {
+    // }
 
-    ESP_ERROR_CHECK(tps_write_register(config_reg.port, TPS_REG_ENABLE, 0x3F));
+    // ESP_ERROR_CHECK(tps_write_register(config_reg.port, TPS_REG_ENABLE, 0x3F));
 
-    tps_set_vcom(config_reg.port, vcom);
+    // tps_set_vcom(config_reg.port, vcom);
 
     state->ep_sth = true;
     mask = (const epd_ctrl_state_t){
@@ -236,11 +236,11 @@ static void epd_board_poweron(epd_ctrl_state_t* state) {
     int tries = 0;
     while (!((tps_read_register(config_reg.port, TPS_REG_PG) & 0xFA) == 0xFA)) {
         if (tries >= 500) {
-            ESP_LOGE(
-                "epdiy",
-                "Power enable failed! PG status: %X",
-                tps_read_register(config_reg.port, TPS_REG_PG)
-            );
+            // ESP_LOGE(
+            //   "epdiy",
+            //    "Power enable failed! PG status: %X",
+            //    tps_read_register(config_reg.port, TPS_REG_PG)
+            // );
             return;
         }
         tries++;

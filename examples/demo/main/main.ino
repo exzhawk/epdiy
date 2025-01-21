@@ -16,6 +16,8 @@ void idf_loop();
 }
 
 void setup() {
+    pinMode(3, OUTPUT);
+    digitalWrite(3,0);
     if (psramInit()) {
         Serial.println("\nThe PSRAM is correctly initialized");
     } else {

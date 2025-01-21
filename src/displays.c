@@ -10,8 +10,8 @@ const EpdDisplay_t ED060SCT = {
 };
 
 const EpdDisplay_t ED060XC3 = {
-    .width = 1024,
-    .height = 768,
+    .width = 1448,  //1024
+    .height = 1072,  //768
     .bus_width = 8,
     .bus_speed = 20,
     .default_waveform = &epdiy_ED060XC3,
@@ -28,8 +28,8 @@ const EpdDisplay_t ED097OC4 = {
 };
 
 const EpdDisplay_t ED097TC2 = {
-    .width = 1200,
-    .height = 825,
+    .width = 1448,   //1448   //1200
+    .height = 1072,   //1072   //825
     .bus_width = 8,
     .bus_speed = 22,
     .default_waveform = &epdiy_ED097TC2,
@@ -64,8 +64,8 @@ const EpdDisplay_t ED047TC2 = {
 };
 
 const EpdDisplay_t ED078KC1 = {
-    .width = 1872,
-    .height = 1404,
+    .width = 1872,//1872
+    .height = 1404,//1404
     .bus_width = 16,
     .bus_speed = 11,
     .default_waveform = &epdiy_ED047TC2,
